@@ -2,9 +2,18 @@
 
 import createInterface from 'readline';
 
-import ICommands from "./Interfaces/ICommands";
+const { injectable, inject } = require("inversify");
 
-export default class AppLogic extends ICommands {
+const ICommands = require("./Interfaces/ICommands");
+const IDataBase = require("./Interfaces/IDataBase");
+
+class AppLogic extends ICommands {
+    #dataBase;
+
+    constructor(dataBase) {
+        super();
+        this.#dataBase = dataBase;
+    }
     getTasksList() {
         throw new Error("Method not implemented.");
     }
@@ -43,31 +52,31 @@ export default class AppLogic extends ICommands {
                   output: process.stdout,
                 });
               
-                let a = NaN;
+                let name = NaN;
                 while (true) {
-                  a = await input('a = ', rl);
-                  if (a === 0) {
-                    console.log('A cannot be 0. Try again.');
+                  name = await input('name = ', rl);
+                  if (name === 0) {
+                    console.log('Name cannot be 0. Try again.');
                   } else {
                     break;
                   }
                 }
               
-                const b = await input('b = ', rl);
-                let c = null;
+                const description = await input('description = ', rl);
+                let deadline = null;
                 while (true) {
-                  c = await input('c = ', rl);
-                  if (c === 0) {
-                    console.log('C cannot be 0. Try again.');
-                  } else if(c != Date) {
-                    console.log('C is the wrong format. Try again.');
+                  deadline = await input('deadline = ', rl);
+                  if (deadline === 0) {
+                    console.log('Deadline cannot be 0. Try again.');
+                  } else if(deadline != Date) {
+                    console.log('Deadline is the wrong format. Try again.');
                   }else{
                     break;
                   }
                 }
               
                 rl.close();
-                console.log(a, b, c);
+                console.log(name, description, deadline);
               };
     }
     ShowTask(id)  {
