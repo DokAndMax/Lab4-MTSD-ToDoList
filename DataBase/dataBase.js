@@ -1,7 +1,9 @@
 'use strict'
-import IDataBase from "../AppLogic/Interfaces/IDataBase";
+const IDataBase = require("../AppLogic/Interfaces/IDataBase");
 
-export default class DataBase extends IDataBase {
+const fs = require('fs');
+
+class DataBase extends IDataBase {
     Create(task)  {
         throw new Error("Method not implemented.");
     }
@@ -18,3 +20,5 @@ export default class DataBase extends IDataBase {
         throw new Error("Method not implemented.");
     }
 }
+
+module.exports = DataBase;

@@ -1,4 +1,4 @@
-export default class ICommands {
+class ICommands {
     getTasksList() {
         throw new Error("Method not implemented.");
     }
@@ -21,3 +21,5 @@ export default class ICommands {
         throw new Error("Method not implemented.");
     }
 }
+
+module.exports = ICommands;

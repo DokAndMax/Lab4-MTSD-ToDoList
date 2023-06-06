@@ -1,4 +1,4 @@
-export default class IDataBase {
+class IDataBase {
     Create(task)  {
         throw new Error("Method not implemented.");
     }
@@ -15,3 +15,5 @@ export default class IDataBase {
         throw new Error("Method not implemented.");
     }
 }
+
+module.exports = IDataBase;

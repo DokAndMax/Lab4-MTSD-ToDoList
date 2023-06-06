@@ -1,15 +1,14 @@
 'use strict'
 
-import { injectable, inject } from "inversify";
+const { injectable, inject } = require("inversify");
 
-import ICommands from "./Interfaces/ICommands";
-import IDataBase from "./Interfaces/IDataBase";
+const ICommands = require("./Interfaces/ICommands");
+const IDataBase = require("./Interfaces/IDataBase");
 
-@injectable()
-export default class AppLogic extends ICommands {
+class AppLogic extends ICommands {
     #dataBase;
 
-    constructor(@inject(IDataBase) dataBase) {
+    constructor(dataBase) {
         super();
         this.#dataBase = dataBase;
     }
@@ -35,3 +34,5 @@ export default class AppLogic extends ICommands {
         throw new Error("Method not implemented.");
     }
 }
+
+module.exports = AppLogic;
