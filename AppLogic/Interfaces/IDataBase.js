@@ -1,6 +1,9 @@
+'use strict'
+const fs = require('fs');
+
 export default class IDataBase {
     Create(task)  {
-        throw new Error("Method not implemented.");
+        
     }
     Read(task)  {
         throw new Error("Method not implemented.");

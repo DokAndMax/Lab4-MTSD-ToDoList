@@ -1,5 +1,13 @@
+'use strict'
+
+import createInterface from 'readline';
+import { isNull } from 'util';
+
+const taskArray = Array();
+
 export default class ICommands {
     getTasksList() {
+        console.log(taskArray);
         throw new Error("Method not implemented.");
     }
     getLateTasks()  {
@@ -8,6 +16,7 @@ export default class ICommands {
     CreateTask(title, description = "", deadline = "")  {
         throw new Error("Method not implemented.");
     }
+
     ShowTask(id)  {
     throw new Error("Method not implemented.");
     }
