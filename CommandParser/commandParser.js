@@ -1,13 +1,14 @@
 'use strict'
 
-import { injectable, inject } from "inversify";
-import ICommands from "../AppLogic/Interfaces/ICommands";
+const { injectable, inject } = require("inversify");
+const ICommands = require("../AppLogic/Interfaces/ICommands");
 
-@injectable()
-export default class CommandParser {
+class CommandParser {
     #commands;
 
-    constructor(@inject(ICommands) commands) {
+    constructor(commands) {
         this.#commands = commands;
     }
 }
+
+module.exports = CommandParser;
