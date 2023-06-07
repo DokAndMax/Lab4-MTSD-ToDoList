@@ -7,7 +7,7 @@ const Task = require("../Models/Task");
 const dbFileName = 'tasks.txt';
 
 class DataBase extends IDataBase {
-    Create(task)  {
+    Create(task) {
         let isDbFileExist = this.createFileIfNotExists(dbFileName);
         let escapedValues = [];
         let lastLine = "";
@@ -21,7 +21,9 @@ class DataBase extends IDataBase {
         this.appendFile(dbFileName, escapedValues.join('\t'));
     }
     Read(task)  {
-        throw new Error("Method not implemented.");
+        if(task.id)
+            throw new Error();
+        return this.getLineWithIdFromFile(task.id, dbFileName);
     }
     ReadAll()  {
         let isDbFileExist = this.createFileIfNotExists(dbFileName);
@@ -67,6 +69,63 @@ class DataBase extends IDataBase {
         return lines.filter(line => line.trim() !== '');
     };
 
+    getLineWithIdFromFile(id, fileName) {
+        const buffer = Buffer.alloc(1); // Буфер для зберігання даних
+        const fileDescriptor = fs.openSync(fileName, 'r'); // Відкриття файлу в режимі читання
+
+        let position = 0;
+        let bytesRead;
+        let values = [];
+        let isValue = false;
+        let isEscapeChar = false;
+        let isNextLine = false;
+        let value = "";
+        while (true){
+            bytesRead = fs.readSync(fileDescriptor, buffer, 0, buffer.length, position);
+            position += bytesRead;
+            if (bytesRead === 0) {
+                break; // Кінець файлу
+            }
+
+            const ch = buffer.toString('utf8', 0, bytesRead);
+
+            if(ch === '\'' && isEscapeChar === false && !isNextLine) {
+                isValue = !isValue;
+                if (isValue)
+                    value = "";
+                else
+                {
+                    values.push(value);
+                    if(values[0] !== id.toString())
+                        isNextLine = !isNextLine;
+                }
+                continue;
+            }
+            else if (ch === '\n')
+            {
+                if(isNextLine) {
+                    isNextLine = false;
+                    values = [];
+                }
+                else
+                    break;
+            }
+            if (isValue === false)
+                continue;
+
+            if(ch === '\\' && isEscapeChar === false) {
+                isEscapeChar = true;
+                continue;
+            }
+
+            value += ch;
+
+            if(isEscapeChar === true)
+                isEscapeChar = false;
+        }
+        return values;
+    }
+
     parseLine(line) {
         let values = [];
         let isValue = false;
@@ -94,6 +153,7 @@ class DataBase extends IDataBase {
             if(isEscapeChar === true)
                 isEscapeChar = false;
         }
+        fs.closeSync(fileDescriptor); // Закриття файлу
         return values;
     }
 
