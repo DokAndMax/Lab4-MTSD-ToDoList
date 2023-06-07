@@ -42,20 +42,27 @@ class DataBase extends IDataBase {
         if(!task.id)
             throw new Error();
 
+        let isUpdated = false;
+
         let fileRows = fs.readFileSync(dbFileName).toString().split('\n');
         for(let [i, fileRow] of fileRows.entries())
         {
             if(this.parseLine(fileRow)[0] === task.id.toString())
             {
                 fileRows.splice(i, 1, this.escapeObj(task).join('\t'));
+                isUpdated = true;
                 break;
             }
         }
         fs.writeFileSync(dbFileName, fileRows.join('\n'));
+
+        return isUpdated;
     }
     Delete(task)  {
         if(!task.id)
             throw new Error();
+
+        let isDeleted = false;
 
         let fileRows = fs.readFileSync(dbFileName).toString().split('\n');
         for(let [i, fileRow] of fileRows.entries())
@@ -63,10 +70,13 @@ class DataBase extends IDataBase {
             if(this.parseLine(fileRow)[0] === task.id.toString())
             {
                 fileRows.splice(i, 1);
+                isDeleted = true;
                 break;
             }
         }
         fs.writeFileSync(dbFileName, fileRows.join('\n'));
+
+        return isDeleted;
     }
     Search(task)  {
         throw new Error("Method not implemented.");
