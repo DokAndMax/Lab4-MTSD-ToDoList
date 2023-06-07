@@ -9,19 +9,16 @@ const dbFileName = 'tasks.txt';
 class DataBase extends IDataBase {
     Create(task) {
         let isDbFileExist = this.createFileIfNotExists(dbFileName);
-        let escapedValues = [];
         let lastLine = "";
-        this.mapObject(task, (v, k, i) =>  {
-            if(isDbFileExist)
-                lastLine = this.readLastLine(dbFileName);
-            task.id = isDbFileExist ? (this.parseLine(lastLine)[0] || 1) : 1
-            let escapedValue = `'${this.escapeValue(v.toString())}'`;
-            escapedValues.push(escapedValue);
-        });
+        if(isDbFileExist)
+            lastLine = this.readLastLine(dbFileName);
+        task.id = isDbFileExist ? (this.parseLine(lastLine)[0] || 1) : 1;
+        let escapedValues = this.escapeObj(task);
+
         this.appendFile(dbFileName, escapedValues.join('\t'));
     }
     Read(task)  {
-        if(task.id)
+        if(!task.id)
             throw new Error();
         return this.getLineWithIdFromFile(task.id, dbFileName);
     }
@@ -41,7 +38,16 @@ class DataBase extends IDataBase {
         return parsedRows;
     }
     Update(task)  {
-        throw new Error("Method not implemented.");
+        let fileRows = fs.readFileSync(dbFileName).toString().split('\n');
+        for(let [i, fileRow] of fileRows.entries())
+        {
+            if(this.parseLine(fileRow)[0] === task.id.toString())
+            {
+                fileRows.splice(i, 1, this.escapeObj(task).join('\t'));
+                break;
+            }
+        }
+        fs.writeFileSync(dbFileName, fileRows.join('\n'));
     }
     Delete(task)  {
         throw new Error("Method not implemented.");
@@ -68,6 +74,15 @@ class DataBase extends IDataBase {
 
         return lines.filter(line => line.trim() !== '');
     };
+
+    escapeObj(obj) {
+        let escapedValues = [];
+        this.mapObject(obj, (v, k, i) =>  {
+            let escapedValue = `'${this.escapeValue(v.toString())}'`;
+            escapedValues.push(escapedValue);
+        });
+        return escapedValues;
+    }
 
     getLineWithIdFromFile(id, fileName) {
         const buffer = Buffer.alloc(1); // Буфер для зберігання даних
@@ -153,7 +168,6 @@ class DataBase extends IDataBase {
             if(isEscapeChar === true)
                 isEscapeChar = false;
         }
-        fs.closeSync(fileDescriptor); // Закриття файлу
         return values;
     }
 
@@ -171,13 +185,12 @@ class DataBase extends IDataBase {
     }
 
     readLastLine(filename) {
-        const bufferLength = 1 * 1024; // Визначаємо буферну довжину (64 КБ)
+        const bufferLength = 1 * 1024;
 
         const fileDescriptor = fs.openSync(filename, 'r');
         const fileSize = fs.statSync(filename).size;
 
         let buffer = Buffer.alloc(bufferLength);
-        let bytesRead;
 
         let position = fileSize;
         let line = '';
