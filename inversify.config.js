@@ -18,6 +18,7 @@ inversify.decorate(inversify.injectable(), DataBase);
 inversify.decorate(inversify.inject(ICommands), CommandParser, 0);
 inversify.decorate(inversify.inject(IDataBase), AppLogic, 0);
 
+container.bind(CommandParser).to(CommandParser);
 container.bind(ICommands).to(AppLogic);
 container.bind(IDataBase).to(DataBase);
 
