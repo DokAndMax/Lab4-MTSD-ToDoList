@@ -24,7 +24,19 @@ class DataBase extends IDataBase {
         throw new Error("Method not implemented.");
     }
     ReadAll()  {
-        throw new Error("Method not implemented.");
+        let isDbFileExist = this.createFileIfNotExists(dbFileName);
+        if (!isDbFileExist)
+            return [];
+
+        let lines = this.readFile(dbFileName);
+
+        let parsedRows = [];
+
+        for (let line of lines) {
+            parsedRows.push(this.parseLine(line));
+        }
+
+        return parsedRows;
     }
     Update(task)  {
         throw new Error("Method not implemented.");
@@ -46,6 +58,13 @@ class DataBase extends IDataBase {
 
     appendFile(fileName, string) {
         fs.appendFileSync(fileName, `${string}\n`);
+    };
+
+    readFile(fileName) {
+        const fileContent = fs.readFileSync(fileName, 'utf-8');
+        const lines = fileContent.split('\n');
+
+        return lines.filter(line => line.trim() !== '');
     };
 
     parseLine(line) {
