@@ -57,7 +57,16 @@ class DataBase extends IDataBase {
         if(!task.id)
             throw new Error();
 
-        throw new Error("Method not implemented.");
+        let fileRows = fs.readFileSync(dbFileName).toString().split('\n');
+        for(let [i, fileRow] of fileRows.entries())
+        {
+            if(this.parseLine(fileRow)[0] === task.id.toString())
+            {
+                fileRows.splice(i, 1);
+                break;
+            }
+        }
+        fs.writeFileSync(dbFileName, fileRows.join('\n'));
     }
     Search(task)  {
         throw new Error("Method not implemented.");
