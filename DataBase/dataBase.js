@@ -20,6 +20,7 @@ class DataBase extends IDataBase {
     Read(task)  {
         if(!task.id)
             throw new Error();
+
         return this.getLineWithIdFromFile(task.id, dbFileName);
     }
     ReadAll()  {
@@ -37,7 +38,10 @@ class DataBase extends IDataBase {
 
         return parsedRows;
     }
-    Update(task)  {
+    Update(task) {
+        if(!task.id)
+            throw new Error();
+
         let fileRows = fs.readFileSync(dbFileName).toString().split('\n');
         for(let [i, fileRow] of fileRows.entries())
         {
@@ -50,6 +54,9 @@ class DataBase extends IDataBase {
         fs.writeFileSync(dbFileName, fileRows.join('\n'));
     }
     Delete(task)  {
+        if(!task.id)
+            throw new Error();
+
         throw new Error("Method not implemented.");
     }
     Search(task)  {
