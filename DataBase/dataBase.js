@@ -23,6 +23,9 @@ class DataBase extends IDataBase {
     Read(task)  {
         throw new Error("Method not implemented.");
     }
+    ReadAll()  {
+        throw new Error("Method not implemented.");
+    }
     Update(task)  {
         throw new Error("Method not implemented.");
     }
