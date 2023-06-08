@@ -1,9 +1,10 @@
 class Task {
-    deadline;
-    completionDate;
+    id;
     title;
     description;
     isCompleted;
+    deadline;
+    completionDate;
 }
 
 module.exports = Task;
