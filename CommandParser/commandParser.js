@@ -1,39 +1,49 @@
 'use strict'
 
 const { injectable, inject } = require("inversify");
-const ICommands = require("../AppLogic/Interfaces/ICommands");
-
+const AppLogic = require("../AppLogic/appLogic");
+const Command = new AppLogic;
 class CommandParser {
-    #commands;
+/*    #commands;
 
     constructor(commands) {
         this.#commands = commands;
-    }
+    } */
     userCommand(command) {
         switch(command){
             case 'list': 
-                getTasksList()
+                Command.getTasksList()
                 break;
             case 'late': 
-                getLateTasks()
+                Command.getLateTasks()
                 break;
             case 'create': 
-                CreateTask(title, description = "", deadline = "")
+                Command.CreateTask(title, description = "", deadline = "")
                 break;
             case 'show': 
-                ShowTask(id)
+                Command.ShowTask(id)
                 break;
             case 'udpate': 
-                UpdateTask(id, title = "", description = "", deadline = "")  
+                Command.UpdateTask(id, title = "", description = "", deadline = "")  
                 break;
             case 'delete':
-                DeleteTask(id) 
+                Command.DeleteTask(id) 
                 break; 
             case 'complete': 
-                DeleteTask(id) 
+                Command.SetCompleteTask(id) 
                 break;
+            case 'help':
+                console.log(`\nThis is a list of supported commands:\n
+                list = show all tasks\n
+                late = show all overdue tasks\n
+                create (title)(description)(deadline) = create a task\n
+                show [id] = display task info\n
+                update [id] (title)(description)(deadline) = update task info\n
+                delete [id] = delete a task\n
+                complete [id] = mark the a task as complete`);
+                throw new Error("This error is used as a temporary way to terminate the script")
             default:
-                throw new Error("Command does not exist");
+                console.log("Command does not exist. Use command 'help' to get the list of supported commands");
         }
     }
 }
