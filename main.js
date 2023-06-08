@@ -11,13 +11,15 @@ const readline = require('readline').createInterface({
 });
 
 if(process.argv[2] !== undefined) {
-    waitForCommand(...process.argv.slice(2));
+    commandParser.userCommand(process.argv[2]);
+}
+else {
+    waitForCommand();
 }
 
-waitForCommand();
 function waitForCommand() {
     readline.question('Введіть команду:\n', command => {
-        //console.log(`${command}!`);
+        commandParser.userCommand(command);
         waitForCommand();
         readline.close();
     });
