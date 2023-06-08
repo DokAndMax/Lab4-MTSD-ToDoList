@@ -20,6 +20,7 @@ else {
 function waitForCommand() {
     readline.question('Введіть команду:\n', command => {
         commandParser.userCommand(command);
+        waitForCommand();
         readline.close();
     });
 }
